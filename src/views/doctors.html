@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCore - Médicos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../utils/app.js"></script>
+    <script src="../components/modal.js"></script>
+    <script src="../components/table.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-dark-bg text-slate-800 dark:text-slate-100 font-sans antialiased">
+
+    <!-- Sidebar & Main Content Wrapper -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-dark-card border-r border-slate-200 dark:border-slate-700 hidden md:flex flex-col transition-all duration-300">
+            <div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-xl">
+                    <i data-lucide="activity"></i> MediCore
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto py-4">
+                <div class="px-3 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Principal</div>
+                <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                </a>
+                <a href="patients.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="users" class="w-5 h-5"></i> Pacientes
+                </a>
+                <a href="doctors.html" class="flex items-center gap-3 px-3 py-2.5 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg mb-1">
+                    <i data-lucide="stethoscope" class="w-5 h-5"></i> Médicos
+                </a>
+                <a href="appointments.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="calendar" class="w-5 h-5"></i> Citas
+                </a>
+                <a href="records.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="file-text" class="w-5 h-5"></i> Historial
+                </a>
+                <a href="billing.html" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i> Facturación
+                </a>
+
+                <div class="px-3 mt-6 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Configuración</div>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg mb-1 transition-colors">
+                    <i data-lucide="settings" class="w-5 h-5"></i> Ajustes
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+                <button id="sidebar-toggle" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i data-lucide="menu" class="w-4 h-4"></i> Menú
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-16 flex items-center justify-between px-6 bg-white dark:bg-dark-card border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-4">
+                    <button id="sidebar-toggle-mobile" class="md:hidden text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="relative w-64">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" placeholder="Buscar médicos..." class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    </button>
+                    <button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-medium text-slate-900 dark:text-white">Dr. Ana García</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Administrador</p>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=Ana+Garcia&background=0ea5e9&color=fff" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-slate-100 dark:border-slate-700">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Doctors Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Médicos</h1>
+                        <p class="text-slate-500 dark:text-slate-400">Gestión del personal médico</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="toggle-view" class="flex items-center gap-2 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            <i data-lucide="grid" class="w-4 h-4"></i> Vista Tarjeta
+                        </button>
+                        <button id="add-doctor-btn" class="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Agregar Médico
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-dark-card p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
+                                <i data-lucide="stethoscope" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900 dark:text-white">15</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Total Médicos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-card p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-600 dark:text-green-400">
+                                <i data-lucide="user-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900 dark:text-white">12</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Disponibles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-card p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-yellow-600 dark:text-yellow-400">
+                                <i data-lucide="clock" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900 dark:text-white">3</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">En Descanso</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-card p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600 dark:text-purple-400">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900 dark:text-white">8</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Especialistas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctors Table View -->
+                <div id="table-view" class="bg-white dark:bg-dark-card rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Lista de Médicos</h3>
+                        <div class="flex items-center gap-3">
+                            <select class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white">
+                                <option>Todas las especialidades</option>
+                                <option>Cardiología</option>
+                                <option>Pediatría</option>
+                                <option>Dermatología</option>
+                                <option>Neurología</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                            <thead class="bg-slate-50 dark:bg-slate-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Médico</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Especialidad</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Teléfono</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Disponibilidad</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estado</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-dark-card divide-y divide-slate-200 dark:divide-slate-700">
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Dr+Smith&background=0ea5e9&color=fff" alt="">
+                                            <div class="ml-3">
+                                                <div class="text-sm font-medium text-slate-900 dark:text-white">Dr. John Smith</div>
+                                                <div class="text-xs text-slate-500 dark:text-slate-400">ID: #MED001</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Cardiología</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">dr.smith@medicore.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">+1 234-567-8901</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Lun-Vie 9:00-17:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Disponible</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                            </button>
+                                            <button class="text-slate-600 hover:text-slate-500 dark:text-slate-400">
+                                                <i data-lucide="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Dra+Johnson&background=10b981&color=fff" alt="">
+                                            <div class="ml-3">
+                                                <div class="text-sm font-medium text-slate-900 dark:text-white">Dra. Sarah Johnson</div>
+                                                <div class="text-xs text-slate-500 dark:text-slate-400">ID: #MED002</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Pediatría</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">dra.johnson@medicore.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">+1 234-567-8902</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Lun-Vie 8:00-16:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Disponible</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                            </button>
+                                            <button class="text-slate-600 hover:text-slate-500 dark:text-slate-400">
+                                                <i data-lucide="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Dr+Williams&background=f59e0b&color=fff" alt="">
+                                            <div class="ml-3">
+                                                <div class="text-sm font-medium text-slate-900 dark:text-white">Dr. Michael Williams</div>
+                                                <div class="text-xs text-slate-500 dark:text-slate-400">ID: #MED003</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Dermatología</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">dr.williams@medicore.com</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">+1 234-567-8903</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">Lun-Vie 10:00-18:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">En Descanso</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                            </button>
+                                            <button class="text-slate-600 hover:text-slate-500 dark:text-slate-400">
+                                                <i data-lucide="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div id="add-doctor-modal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" data-trigger="add-doctor-btn">
+        <div class="bg-white dark:bg-dark-card rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl max-w-md w-full mx-4">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Agregar Nuevo Médico</h3>
+                <button class="close-modal text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo</label>
+                    <input type="text" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white" placeholder="Dr. John Smith">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Especialidad</label>
+                    <select class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white">
+                        <option>Cardiología</option>
+                        <option>Pediatría</option>
+                        <option>Dermatología</option>
+                        <option>Neurología</option>
+                        <option>Medicina General</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                    <input type="email" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white" placeholder="dr.smith@medicore.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Teléfono</label>
+                    <input type="tel" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white" placeholder="+1 234-567-8901">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horario Disponible</label>
+                    <input type="text" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white" placeholder="Lun-Vie 9:00-17:00">
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal('add-doctor-modal')" class="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors">
+                        Agregar Médico
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Toggle view functionality
+        document.getElementById('toggle-view').addEventListener('click', function() {
+            const tableView = document.getElementById('table-view');
+            const isHidden = tableView.classList.contains('hidden');
+            
+            if (isHidden) {
+                tableView.classList.remove('hidden');
+                this.innerHTML = '<i data-lucide="grid" class="w-4 h-4"></i> Vista Tarjeta';
+            } else {
+                tableView.classList.add('hidden');
+                this.innerHTML = '<i data-lucide="list" class="w-4 h-4"></i> Vista Tabla';
+            }
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
