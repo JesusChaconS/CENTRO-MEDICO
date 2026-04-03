@@ -1,5 +1,6 @@
 #Carpetas
 mds/
+db/
 
 # Dependencies
 node_modules/
