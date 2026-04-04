@@ -49,7 +49,7 @@
         <aside id="sidebar" class="w-64 bg-white dark:bg-dark-card border-r border-slate-200 dark:border-slate-700 hidden md:flex flex-col transition-all duration-300">
             <div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-700">
                 <div class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-xl">
-                    <i data-lucide="activity"></i> MediCore
+                    <i data-lucide="activity"></i> CM MERCI
                 </div>
             </div>
 
@@ -81,8 +81,8 @@
             </nav>
 
             <div class="p-4 border-t border-slate-200 dark:border-slate-700">
-                <button id="sidebar-toggle" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                    <i data-lucide="menu" class="w-4 h-4"></i> Menú
+                <button id="btn-logout" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesion
                 </button>
             </div>
         </aside>
@@ -112,8 +112,8 @@
                     </button>
                     <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-medium text-slate-900 dark:text-white">Dr. Ana García</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Administrador</p>
+                            <p class="text-sm font-medium text-slate-900 dark:text-white" id="usuario-nombre">Dr. Ana García</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" id="usuario-rol">Administrador</p>
                         </div>
                         <img src="https://ui-avatars.com/api/?name=Ana+Garcia&background=0ea5e9&color=fff" alt="Avatar" class="w-9 h-9 rounded-full border-2 border-slate-100 dark:border-slate-700">
                     </div>
@@ -285,5 +285,6 @@
             initCharts();
         });
     </script>
+    <script type="module" src="../services/authSesion.js"></script>
 </body>
 </html>

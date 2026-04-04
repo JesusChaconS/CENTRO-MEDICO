@@ -1,6 +1,10 @@
+#Archivos en especifico
+
+
 #Carpetas
 mds/
 db/
+docs/
 
 # Dependencies
 node_modules/
