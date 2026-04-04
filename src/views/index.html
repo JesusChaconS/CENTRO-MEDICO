@@ -14,7 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom Styles -->
     <link rel="stylesheet" href="../styles/styles.css">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -60,11 +59,11 @@
             <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-500/10 rounded-2xl mb-4 text-primary-600 dark:text-primary-400">
                 <i data-lucide="activity" class="w-8 h-8"></i>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">MediCore</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Medicore/h1>
             <p class="text-slate-500 dark:text-slate-400 mt-2">Gestión de Salud Integral</p>
         </div>
 
-        <form onsubmit="event.preventDefault();" class="space-y-6">
+        <form class="space-y-6" id="login-form">
             <div>
                 <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico</label>
                 <div class="relative">
@@ -95,7 +94,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:scale-[1.02]">
+            <button id="iniciar-sesion" type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all transform hover:scale-[1.02]" >
                 Iniciar Sesión
             </button>
         </form>
@@ -109,6 +108,7 @@
 
     <!-- Inicializar Iconos y Tema -->
     <script>
+        // Inicializar iconos de Lucide
         lucide.createIcons();
         
         // Función para alternar tema
@@ -131,6 +131,37 @@
             themeToggle.onclick = toggleTheme;
             document.body.appendChild(themeToggle);
             lucide.createIcons();
+        });
+    </script>
+
+    <!-- Lógica de Login -->
+    <script type="module" >
+        // Importa la función de login desde el módulo de autenticación
+        import { login } from '../services/authService.js';
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+        try{
+
+            const data = await login(email, password); // Llama a la función de login con las credenciales
+            
+            // Si el login es exitoso, redirige al dashboard o muestra un mensaje de éxito
+            if(data.usuario.rol === 'admin'){
+                window.location.href = '../views/dashboard.html'; // Redirige al dashboard de admin
+            } else if(data.usuario.rol === 'doctor'){
+                window.location.href = '../views/dashboard.html'; // Redirige al dashboard de doctor
+            } else {
+                errorMsg.textContent = 'Rol de usuario desconocido';
+                errorMsg.classList.remove('hidden');
+            }
+        }
+        catch(error){
+            console.log('Error en login:', error);
+        }
         });
     </script>
 </body>
