@@ -5,6 +5,7 @@ newuser.js
 mds/
 db/
 docs/
+utilidad/
 
 # Dependencies
 node_modules/

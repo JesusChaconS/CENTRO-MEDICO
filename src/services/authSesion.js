@@ -20,4 +20,14 @@ if (rolEl) rolEl.textContent = usuario.rol;
 const btnLogout = document.getElementById('btn-logout');
 if (btnLogout) btnLogout.addEventListener('click', logout);
 
-//Agrega la funcion de logo de usuario con sus inciales usando a API ui-avatars.com
+
+//Agrega la funcion de logo de usuario con sus inciales usando a API ui-avatars.com - OK
+const getAvatarUrl = (nombre) => {
+    const nombreEl = encodeURIComponent(nombre);
+    return `https://ui-avatars.com/api/?name=${nombreEl}&background=0ea5e9&color=fff'`; // Personaliza el fondo y el color del texto según tus preferencias
+}
+
+const avatarEl = document.getElementById('usuario-avatar');
+if (avatarEl) {
+    avatarEl.src = getAvatarUrl(usuario.nombre);
+}
